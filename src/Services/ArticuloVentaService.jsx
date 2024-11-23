@@ -48,25 +48,30 @@ export async function newArticuloVenta(model) {
 
     return data;
   } catch (e) {
-    //  console.error(e);
-    // if (e.response && e.response.status === 400) {
-    //     //setMensaje('Error: Los datos proporcionados son inválidos');
-    //     alert('Error: Los datos proporcionados son inválidos');
-    // }
-    // else {
-    //     alert(e.response);
-    //     alert(e.response.status);
-    //     // setMensaje('Error al conectarse con el servidor');
-    // }
+     console.error(e);
+    if (e.response && e.response.status === 400) {
+        setMensaje('Error: Los datos proporcionados son inválidos');
+        alert('Error: Los datos proporcionados son inválidos');
+    }
+    else {
+        alert(e.response);
+        alert(e.response.status);
+        setMensaje('Error al conectarse con el servidor');
+    }
     return null;
   }
 }
 
 export async function eliminarArticulosVenta(id) {
   const urlBase = API_URL + "/articulosEliminar";
+  try{
   const { data } = await axios({
     method: "PUT",
     url: `${urlBase}/${id}`,
   });
   return true;
+}catch(error){
+  alert("Error al eliminar el articulo:", error);
+  throw error;
+}
 }

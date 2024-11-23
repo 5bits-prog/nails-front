@@ -1,48 +1,37 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { obtenerCliente } from "../Services/ClienteService";
+import { ClienteContext } from "../Context/ClienteContext";
 
 export default function Cliente({ title }) {
-  const urlBase = "http://localhost:8080/nails/clientes";
+  
   let navegacion = useNavigate();
-
   const { id } = useParams();
-
-  const [cliente, setCliente] = useState({
-    razonSocial: "",
-    celular: "",
-    mail: "",
-  });
-
-  const { razonSocial, celular, mail } = cliente;
+  const { getCliente, clienteActual, setClienteActual, newCliente, putCliente } = ClienteContext();
 
   useEffect(() => {
-    cargarCliente();
-  }, []);
-
-  const cargarCliente = async () => {
-    console.log(id);
-    if (id > 0) {
-      console.log(id);
-      const resultado = await obtenerCliente(id);
-      console.log(resultado);
-      setCliente(resultado);
+    if (id) {
+      getCliente(parseInt(id));
+    } else {
+      // Limpiar el estado si no hay ID
+      setClienteActual({ razonSocial: "", celular: "", mail: "" });
     }
-  };
+  }, [id]);
 
   const onInputChange = ({ target: { name, value } }) => {
     //spread operator ... (expandir los atributos)
-    setCliente({ ...cliente, [name]: value });
+    setClienteActual((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const urlBase = "http://localhost:8080/nails/clientes";
-    if (id > 0) {
-      await axios.put(`${urlBase}/${id}`, cliente);
+    if (id) {
+      await putCliente(clienteActual);
     } else {
-      await axios.post(urlBase, cliente);
+      await newCliente(clienteActual);
     }
     // Redirigimos a la pagina de inicio
     navegacion("/clienteList");

@@ -2,12 +2,11 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
-import { LineaContext } from "./LineaContext";
+import { LineaContext } from "../Context/LineaContext";
 import { obtenerLineas, eliminarLineas } from "../Services/LineaService";
 
 export default function ListadoLinea() {
-  const { lineas, setLineas } = useContext(LineaContext);
-
+  const { lineas, setLineas } = useContext(LineaContext); 
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);

@@ -64,7 +64,7 @@ export async function eliminarServicio(id) {
     });
     return data;
   } catch (error) {
-    console.error("Error al eliminar el servicio:", error);
+    alert("Error al eliminar el servicio:", error);   
     throw error;
   }
 }

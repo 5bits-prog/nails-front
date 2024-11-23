@@ -3,22 +3,23 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ListadoCliente from "./Configuracion/ListadoCliente";
-import Cliente from "./Configuracion/Cliente";
-import ClienteProvider from "./Configuracion/ClienteContext";
+import ListadoCliente from "./Clientes/ListadoCliente";
+import Cliente from "./Clientes/Cliente";
+import ClienteProvider from "./Context/ClienteContext";
 import Menu from "./Menu";
 import ListadoLinea from "./Articulos/ListadoLinea";
 import Linea from "./Articulos/Linea";
 import ListadoArticulosVenta from "./Articulos/ListadoArticulosVenta";
 import ArticuloVenta from "./Articulos/ArticuloVenta";
-import LineaProvider from "./Articulos/LineaContext";
-import TipoServicioProvider from "./GServicios/TipoServicioContext";
+import LineaProvider from "./Context/LineaContext";
+import TipoServicioProvider from "./Context/TipoServicioContext";
 import TipoServicio from "./GServicios/TipoServicio";
 import ListadoTipoServicio from "./GServicios/ListadoTipoServicio";
-import ArticuloVentaProvider from "./Articulos/ArticuloVentaContext";
-import ServicioProvider from "./GServicios/ServicioContext";
+import ArticuloVentaProvider from "./Context/ArticuloVentaContext";
+import ServicioProvider from "./Context/ServicioContext";
 import Servicio from "./GServicios/Servicio";
 import ListadoServicio from "./GServicios/ListadoServicio";
+import { NotificationProvider } from "./Context/NotificacionContext";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <BrowserRouter>
         <Menu />
         <Routes>
+          <NotificationProvider>
           <Route
             exact
             path="/clienteList"
@@ -167,6 +169,7 @@ function App() {
               </ServicioProvider>
             }
           />
+          </NotificationProvider>
         </Routes>
       </BrowserRouter>
     </div>

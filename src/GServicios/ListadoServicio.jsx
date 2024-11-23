@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
-import { ServicioContext } from "./ServicioContext";
+import { ServicioContext } from "../Context/ServicioContext";
 import {
   eliminarServicio,
   obtenerServicios,
 } from "../Services/ServicioService";
 
 export default function ListadoServicio() {
+
   const { servicios, setServicios } = useContext(ServicioContext);
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);

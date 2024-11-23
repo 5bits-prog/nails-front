@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-
 export const ClienteContext = createContext();
 
 const ClienteProvider = ({ children }) => {
