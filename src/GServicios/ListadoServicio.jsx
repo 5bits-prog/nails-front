@@ -8,8 +8,13 @@ import {
 } from "../Services/ServicioService";
 
 export default function ListadoServicio() {
+  const servicios = [
+    { id: 1, clienteRazonSocial: "Cliente A", fechaDocumento: "2024-11-25", tipoServicio: "Consultoría", precio: 1500 },
+    { id: 2, clienteRazonSocial: "Cliente B", fechaDocumento: "2024-11-26", tipoServicio: "Soporte", precio: 800 },
+    { id: 3, clienteRazonSocial: "Cliente C", fechaDocumento: "2024-11-27", tipoServicio: "Implementación", precio: 2000 },
+  ];
 
-  const { servicios, setServicios } = useContext(ServicioContext);
+  // const { servicios, setServicios } = useContext(ServicioContext);
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
@@ -90,6 +95,18 @@ export default function ListadoServicio() {
     return sorted;
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    }).format(price);
+  };
+ 
+  const formatDate = (date) => {
+    const fecha = new Date(date);
+    return new Intl.DateTimeFormat("es-ES").format(fecha);
+  };
+
   return (
     <div className="container">
       <div>
@@ -121,78 +138,82 @@ export default function ListadoServicio() {
 
       <hr />
 
-      {loading ? (
+      {/* {loading ? (
         <div className="text-center">Cargando...</div>
       ) : error ? (
         <div className="alert alert-danger">{error}</div>
-      ) : (
+      ) : ( */}
         <>
-          <table className="table table-striped table-hover align-middle">
-            <thead className="table-dark text-center">
-              <tr>
-                <th scope="col" onClick={() => handleSort("id")}>
-                  #
-                  {sortConfig.key === "id" && (
-                    <span>
-                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                    </span>
-                  )}
-                </th>
-
-                <th scope="col" onClick={() => handleSort("cliente")}>
-                  Cliente
-                  {sortConfig.key === "cliente" && (
-                    <span>
-                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                    </span>
-                  )}
-                </th>
-                <th scope="col" onClick={() => handleSort("fecha")}>
-                  Fecha
-                  {sortConfig.key === "fecha" && (
-                    <span>
-                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                    </span>
-                  )}
-                </th>
-                <th scope="col">Acciones</th>
+        <table className="table table-striped table-hover align-middle">
+          <thead className="table-dark text-center">
+            <tr>
+              <th scope="col" onClick={() => handleSort("id")}>
+                #
+                {sortConfig.key === "id" && (
+                  <span>
+                    {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                  </span>
+                )}
+              </th>
+              <th scope="col" onClick={() => handleSort("cliente")}>
+                Cliente
+                {sortConfig.key === "cliente" && (
+                  <span>
+                    {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                  </span>
+                )}
+              </th>
+              <th scope="col" onClick={() => handleSort("fecha")}>
+                Fecha
+                {sortConfig.key === "fecha" && (
+                  <span>
+                    {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                  </span>
+                )}
+              </th>
+              <th scope="col">Tipo de Servicio</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedData().map((servicio, indice) => (
+              <tr key={indice}>
+                <th scope="row">{servicio.id}</th>
+                <td>{servicio.clienteRazonSocial}</td>
+                <td>{formatDate(servicio.fechaDocumento)}</td>
+                <td>{servicio.tipoServicio || "No especificado"}</td>
+                <td>{servicio.precio ? `${formatPrice(servicio.precio.toFixed(2))}` : "N/A"}</td>
+                <td className="text-center">
+                  <div>
+                    {/* <Link
+                      to={`/servicio/${servicio.id}`}
+                      className="btn btn-link btn-sm me-3"
+                    >
+                      <img
+                        src={IMAGEN_EDIT}
+                        style={{ width: "20px", height: "20px" }}
+                        alt="Editar"
+                      />
+                      Editar
+                    </Link> */}
+                    <button
+                      onClick={() => eliminar(servicio.id)}
+                      className="btn btn-link btn-sm me-3"
+                    >
+                      <img
+                        src={IMAGEN_DELETE}
+                        style={{ width: "20px", height: "20px" }}
+                        alt="Eliminar"
+                      />
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {sortedData().map((servicio, indice) => (
-                <tr key={indice}>
-                  <th scope="row">{servicio.id}</th>
-
-                  <td>{servicio.clienteRazonSocial}</td>
-                  <td>{servicio.fechaDocumento}</td>
-                  <td className="text-center">
-                    <div>
-                      <Link
-                        to={`/servicio/${servicio.id}`}
-                        className="btn btn-link btn-sm me-3"
-                      >
-                        <img
-                          src={IMAGEN_EDIT}
-                          style={{ width: "20px", height: "20px" }}
-                        />
-                        Editar
-                      </Link>
-                      <button
-                        onClick={() => eliminar(servicio.id)}
-                        className="btn btn-link btn-sm me-3"
-                      >
-                        <img
-                          src={IMAGEN_DELETE}
-                          style={{ width: "20px", height: "20px" }}
-                        />
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
 
           {/* Paginación */}
           <div className="d-md-flex justify-content-md-end">
@@ -225,7 +246,7 @@ export default function ListadoServicio() {
             </div>
           </div>
         </>
-      )}
+    
     </div>
   );
 }

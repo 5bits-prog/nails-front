@@ -5,8 +5,41 @@ import { ITEMS_PER_PAGE, API_URL } from "../App.config";
 import { ClienteContext } from "../Context/ClienteContext";
 import { obtenerClientes, eliminarCliente } from "../Services/ClienteService";
 
+const clientesPrueba = [
+  {
+    id: 1,
+    razonSocial: "Juan Pérez",
+    celular: "2664838622",
+    mail: "juan.perez@example.com",
+  },
+  {
+    id: 2,
+    razonSocial: "María González",
+    celular: "3533451941",
+    mail: "maria.gonzalez@example.com",
+  },
+  {
+    id: 3,
+    razonSocial: "Carlos Ramírez",
+    celular: "2664838622",
+    mail: "carlos.ramirez@example.com",
+  },
+  {
+    id: 4,
+    razonSocial: "Ana López",
+    celular: "3533451941",
+    mail: "ana.lopez@example.com",
+  },
+  {
+    id: 5,
+    razonSocial: "Pedro Martínez",
+    celular: "2664838622",
+    mail: "pedro.martinez@example.com",
+  },
+];
+
 export default function ListadoCliente() {
-  const { clientes, setClientes } = useContext(ClienteContext);
+  const { clientes, setClientes, deleteCliente } = useContext(ClienteContext);
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
@@ -18,6 +51,7 @@ export default function ListadoCliente() {
 
   useEffect(() => {
     getDatos();
+   
   }, [page, pageSize, consulta]);
 
   const handlePageChange = (newPage) => {
@@ -41,16 +75,7 @@ export default function ListadoCliente() {
   };
 
   const eliminar = async (id) => {
-    try {
-      const eliminacionExitosa = await eliminarCliente(id);
-      if (eliminacionExitosa) {
-        getDatos();
-      } else {
-        console.error("Error al eliminar el cliente");
-      }
-    } catch (error) {
-      console.error("Error al eliminar el cliente:", error);
-    }
+    deleteCliente(id)
   };
 
   ///////////////////////////////////////Para el orden de las tablas///////////////////////////////////////////////////
@@ -79,6 +104,22 @@ export default function ListadoCliente() {
     return sorted;
   };
   ///////////////////////////////////////Hasta aca para el orden de las tablas///////////////////////////////////////////////////
+  
+  const formatPhoneNumber = (phone) => {
+    // Elimina todo lo que no sea un número
+    const cleaned = phone.replace(/\D/g, "");
+
+    // Si el número tiene 10 dígitos, formatéalo con el formato argentino
+    if (cleaned.length === 10) {
+    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
+    }
+    // Si el número tiene 11 dígitos (incluyendo el código de país +54)
+    if (cleaned.length === 11) {
+      return `+54 9 ${cleaned.slice(1, 3)} ${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+    }
+    
+    return cleaned;
+  };
 
   return (
     <div className="container">
@@ -151,11 +192,12 @@ export default function ListadoCliente() {
         <tbody>
           {
             //iteramos empleados
-            sortedData().map((cliente, indice) => (
+            // sortedData().map((cliente, indice) => (
+            clientesPrueba.map((cliente, indice) => (
               <tr key={indice}>
                 <th scope="row">{cliente.id}</th>
                 <td>{cliente.razonSocial}</td>
-                <td>{cliente.celular}</td>
+                <td>{formatPhoneNumber(cliente.celular)}</td>
                 <td>{cliente.mail}</td>
 
                 <td className="text-center">

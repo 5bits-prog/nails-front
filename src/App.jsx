@@ -25,9 +25,10 @@ function App() {
   return (
     <div className="conteiner">
       <BrowserRouter>
+      <NotificationProvider>
         <Menu />
         <Routes>
-          <NotificationProvider>
+          
           <Route
             exact
             path="/clienteList"
@@ -155,22 +156,27 @@ function App() {
             exact
             path="/servicio"
             element={
+              <ClienteProvider>
               <ServicioProvider>
                 <Servicio title="Nuevo" />
               </ServicioProvider>
+              </ClienteProvider>
             }
           />
           <Route
             exact
             path="/servicio/:id"
             element={
+              <ClienteProvider>
               <ServicioProvider>
                 <Servicio title="Editar" />
               </ServicioProvider>
+              </ClienteProvider>
             }
           />
-          </NotificationProvider>
+          
         </Routes>
+        </NotificationProvider>
       </BrowserRouter>
     </div>
   );
