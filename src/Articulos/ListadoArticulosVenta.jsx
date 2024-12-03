@@ -31,11 +31,9 @@ export default function ListadoArticulosVenta() {
   };
 
   const getDatos = async () => {
-    console.log("carga " + page);
-    console.log('consulta',consulta,'page',page,'pagesixe',pageSize)
-    obtenerArticulosVenta(consulta, page, pageSize)
+    obtenerArticulosVenta()
       .then((response) => {
-        setArticulos(response.content);
+        setArticulos(response);
         setTotalPages(response.totalPages);
       })
       .catch((error) => {

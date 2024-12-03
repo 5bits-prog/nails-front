@@ -4,11 +4,11 @@ import { API_URL } from "../App.config";
 const urlBase = API_URL + "/articulosPageQuery";
 
 
-export async function obtenerArticulosVenta(consulta, page, pageSize) {
+export async function obtenerArticulosVenta() {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `http://localhost:8080/nails_back/articulosPageQuery?consulta=Denominacion`,
+      url: `http://localhost:8080/nails_back/articulos`,
     });
     return data;
   } catch (error) {
@@ -57,7 +57,6 @@ export async function newArticuloVenta(model) {
     }
     else {
         alert(e.response);
-        alert(e.response.status);
         setMensaje('Error al conectarse con el servidor');
     }
     return null;
