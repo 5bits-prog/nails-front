@@ -32,6 +32,7 @@ export default function ListadoArticulosVenta() {
 
   const getDatos = async () => {
     console.log("carga " + page);
+    console.log('consulta',consulta,'page',page,'pagesixe',pageSize)
     obtenerArticulosVenta(consulta, page, pageSize)
       .then((response) => {
         setArticulos(response.content);

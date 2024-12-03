@@ -6,12 +6,15 @@ export const ClienteContext = createContext();
 
 const ClienteProvider = ({ children }) => {
   const [clientes, setClientes] = useState([]);
-  const [clienteActual, setClienteActual] = useState(null);
+  const [clienteActual, setClienteActual] = useState(
+    { razonSocial: "",
+    celular: "",
+    mail: ""});
   const { mostrarMensaje } = useNotification();
 
   const getClientes = async () => {
     try {
-      const data = await ClienteService.obtenerClientes();
+      const data = await obtenerClientes();
       setClientes(data);
     } catch (error) {
       console.error("Error cargando clientes:", error);
@@ -21,7 +24,7 @@ const ClienteProvider = ({ children }) => {
 
   const getCliente = async (id) => {
     try {
-      const data = await ClienteService.obtenerCliente(id);
+      const data = await obtenerCliente(id);
       setClienteActual(data);
     } catch (error) {
       console.error("Error cargando cliente:", error);
@@ -29,23 +32,24 @@ const ClienteProvider = ({ children }) => {
     }
   };
 
-  const newCliente = async (cliente) => {
+  const postCliente = async (cliente) => {
     try {
-      await ClienteService.newCliente(cliente);
+      await newCliente(cliente);
       mostrarMensaje("Cliente creado exitosamente");
-      await cargarClientes(); 
-
+      
     } catch (error) {
       console.error("Error creando cliente:", error);
       mostrarMensaje("Error creando cliente");
+    } finally{
+      await getClientes(); 
     }
   };
 
   const putCliente = async (cliente) => {
     try {
-      await ClienteService.actualizarCliente(cliente);
+      await actualizarCliente(cliente);
       mostrarMensaje("Cliente actualizado exitosamente");
-      await cargarClientes(); 
+      await getClientes();  
     } catch (error) {
       console.error("Error actualizando cliente:", error);
       mostrarMensaje("Error actualizando cliente");
@@ -54,9 +58,9 @@ const ClienteProvider = ({ children }) => {
 
   const deleteCliente = async (id) => {
     try {
-      await ClienteService.eliminarCliente(id);
+      await eliminarCliente(id);
       mostrarMensaje("Cliente eliminado exitosamente");
-      await cargarClientes(); 
+      await getClientes();  
     } catch (error) {
       console.error("Error eliminando cliente:", error);
       mostrarMensaje("Error eliminando cliente");
@@ -69,7 +73,7 @@ const ClienteProvider = ({ children }) => {
       setClienteActual,
       getClientes,
       getCliente,
-      newCliente,
+      postCliente,
       putCliente,
       deleteCliente,}}>
       {children}

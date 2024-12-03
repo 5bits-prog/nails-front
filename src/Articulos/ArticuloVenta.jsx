@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   newArticuloVenta,
+  obtenerArticulosVenta,
   obtenerArticuloVenta,
 } from "../Services/ArticuloVentaService";
 import { obtenerLineas2 } from "../Services/LineaService";
@@ -57,6 +58,7 @@ export default function ArticuloVenta({ title }) {
     window.alert("id lina" + selectedLinea);
     newArticuloVenta(data);
     // Redirigimos a la pagina de inicio
+    obtenerArticulosVenta(0,0,10)
     navegacion("/articuloList");
   };
 

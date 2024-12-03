@@ -9,17 +9,18 @@ const ServicioProvider = ({ children }) => {
   const [servicios, setServicios] = useState([]);
   const [loading, setLoading] = useState(false); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
-  const {mostrarNotificacion } = useNotification();
+  const {mostrarMensaje} = useNotification();
 
    // Función para cargar servicios paginados
-   const cargarServicios = async (consulta = "", page = 0, pageSize = 10) => {
+   const cargarServicios = async () => {
     setLoading(true);
     try {
-      const data = await obtenerServicios(consulta, page, pageSize);
+      const data = await obtenerServicios();
       setServicios(data.content || data); // Ajustar según estructura del backend
+      console.log(data)
     } catch (err) {
       setError(err.message);
-      mostrarNotificacion("Error cargando servicios");
+      mostrarMensaje("Error cargando servicios");
     } finally {
       setLoading(false);
     }
@@ -33,7 +34,7 @@ const ServicioProvider = ({ children }) => {
       return data;
     } catch (err) {
       setError(err.message);
-      mostrarNotificacion(`Error al cargar el servicio con ID ${id}`);
+      mostrarMensaje(`Error al cargar el servicio con ID ${id}`);
       return null;
     } finally {
       setLoading(false);
@@ -44,15 +45,15 @@ const ServicioProvider = ({ children }) => {
       setLoading(true);
       try {
         const data = await newServicio(servicio);
-        mostrarNotificacion("Servicio creado con éxito");
+        mostrarMensaje("Servicio creado con éxito");
 
-        const serviciosActualizados = await obtenerServicios("", 0, 10);
-        setServicios(serviciosActualizados);
+        // const serviciosActualizados = await obtenerServicios("", 0, 10);
+        // setServicios(serviciosActualizados);
         return data;
 
       } catch (err) {
         setError(err.message);
-        mostrarNotificacion("Error al crear el servicio", "error");
+        // mostrarNotificacion("Error al crear el servicio", "error");
         throw err;
       } finally {
         setLoading(false);
@@ -64,11 +65,11 @@ const ServicioProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await actualizarServicio(servicio);
-      mostrarNotificacion("Servicio actualizado con éxito", "success");
+      mostrarMensaje("Servicio actualizado con éxito", "success");
       return data;
     } catch (err) {
       setError(err.message);
-      mostrarNotificacion("Error al actualizar el servicio", "error");
+      mostrarMensaje("Error al actualizar el servicio", "error");
       throw err;
     } finally {
       setLoading(false);
@@ -80,11 +81,11 @@ const ServicioProvider = ({ children }) => {
     setLoading(true);
     try {
       await eliminarServicio(id);
-      mostrarNotificacion("Servicio eliminado con éxito", "success");
+      mostrarMensaje("Servicio eliminado con éxito", "success");
       setServicios((prevServicios) => prevServicios.filter((s) => s.id !== id));
     } catch (err) {
       setError(err.message);
-      mostrarNotificacion(`Error al eliminar el servicio con ID ${id}`, "error");
+      mostrarMensaje(`Error al eliminar el servicio con ID ${id}`, "error");
     } finally {
       setLoading(false);
     }

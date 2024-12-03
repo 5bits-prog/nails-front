@@ -2,8 +2,9 @@ export const API_ROUTES = {
     //CLIENTE
     CLIENTES_PAGE_QUERY: "/clientesPageQuery",
     CLIENTES: "/clientes",
-    CLIENTE: (id = "") => (id ? `/cliente/${id}` : "/cliente"),
+    CLIENTE: (id = "") => (id ? `/cliente/${id}` : "/clientes"),
     CLIENTE_ELIMINAR:(id) => `/clienteEliminar/${id}`,
+    CLIENTE_PUT: (id) =>`/clientes/${id}`,
 
     // SERVICIOS
     SERVICIOS_PAGE_QUERY: "/serviciosPageQuery",

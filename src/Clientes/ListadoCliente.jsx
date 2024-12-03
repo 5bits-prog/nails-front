@@ -4,42 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import { ITEMS_PER_PAGE, API_URL } from "../App.config";
 import { ClienteContext } from "../Context/ClienteContext";
 import { obtenerClientes, eliminarCliente } from "../Services/ClienteService";
+import style from '../extras/estilos/listaClientes.module.css';
 
-const clientesPrueba = [
-  {
-    id: 1,
-    razonSocial: "Juan Pérez",
-    celular: "2664838622",
-    mail: "juan.perez@example.com",
-  },
-  {
-    id: 2,
-    razonSocial: "María González",
-    celular: "3533451941",
-    mail: "maria.gonzalez@example.com",
-  },
-  {
-    id: 3,
-    razonSocial: "Carlos Ramírez",
-    celular: "2664838622",
-    mail: "carlos.ramirez@example.com",
-  },
-  {
-    id: 4,
-    razonSocial: "Ana López",
-    celular: "3533451941",
-    mail: "ana.lopez@example.com",
-  },
-  {
-    id: 5,
-    razonSocial: "Pedro Martínez",
-    celular: "2664838622",
-    mail: "pedro.martinez@example.com",
-  },
-];
 
 export default function ListadoCliente() {
-  const { clientes, setClientes, deleteCliente } = useContext(ClienteContext);
+  const { clientes, setClientes, deleteCliente, getClientes } = useContext(ClienteContext);
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
@@ -50,24 +19,12 @@ export default function ListadoCliente() {
   }); //se utiliza para el orden
 
   useEffect(() => {
-    getDatos();
+    getClientes();
    
   }, [page, pageSize, consulta]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-  };
-
-  const getDatos = async () => {
-    console.log("carga " + page);
-    obtenerClientes(consulta, page, pageSize)
-      .then((response) => {
-        setClientes(response.content);
-        setTotalPages(response.totalPages);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
   };
 
   const handConsultaChange = (e) => {
@@ -106,24 +63,25 @@ export default function ListadoCliente() {
   ///////////////////////////////////////Hasta aca para el orden de las tablas///////////////////////////////////////////////////
   
   const formatPhoneNumber = (phone) => {
+    if (!phone) return ""; // Si no hay teléfono, retorna una cadena vacía
+  
     // Elimina todo lo que no sea un número
     const cleaned = phone.replace(/\D/g, "");
-
+  
     // Si el número tiene 10 dígitos, formatéalo con el formato argentino
     if (cleaned.length === 10) {
-    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
     }
     // Si el número tiene 11 dígitos (incluyendo el código de país +54)
     if (cleaned.length === 11) {
       return `+54 9 ${cleaned.slice(1, 3)} ${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
     }
-    
     return cleaned;
   };
 
   return (
     <div className="container">
-      <div>
+      <div className={style.titulo}>
         <h1> Gestión de Clientes </h1>
         <hr></hr>
       </div>
@@ -193,7 +151,7 @@ export default function ListadoCliente() {
           {
             //iteramos empleados
             // sortedData().map((cliente, indice) => (
-            clientesPrueba.map((cliente, indice) => (
+            clientes.map((cliente, indice) => (
               <tr key={indice}>
                 <th scope="row">{cliente.id}</th>
                 <td>{cliente.razonSocial}</td>
@@ -204,7 +162,7 @@ export default function ListadoCliente() {
                   <div>
                     <Link
                       to={`/cliente/${cliente.id}`}
-                      className="btn btn-link btn-sm me-3"
+                      className={"btn btn-link btn-sm me-3"}
                     >
                       Editar
                     </Link>
@@ -231,7 +189,7 @@ export default function ListadoCliente() {
           </Link>
         </div>
         <div className="col-4">
-          <Link to={`/`} className="btn btn-info btn-sm me-3">
+          <Link to={`/home`} className="btn btn-info btn-sm me-3">
             Regresar
           </Link>
         </div>

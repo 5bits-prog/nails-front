@@ -6,7 +6,7 @@ export async function obtenerLineas(consulta, page, pageSize) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: `http://localhost:8080/nails_back/lineasPageQuery`,
     });
     return data;
   } catch (error) {
@@ -19,7 +19,7 @@ export async function obtenerLineas2() {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/lineas`,
+      url: `http://localhost:8080/nails_back/lineas`,
     });
     return data;
   } catch (error) {

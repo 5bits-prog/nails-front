@@ -29,12 +29,12 @@ export async function newCliente(cliente) {
 }
 
 export async function actualizarCliente(cliente) {
-    const { data } = await api.put(API_ROUTES.CLIENTE(cliente.id), cliente);
+    const { data } = await api.put(API_ROUTES.CLIENTE_PUT(cliente.id), cliente);
     return data;
  
 }
 
 export async function eliminarCliente(id) {
-  const { data } = await api.delete(API_ROUTES.CLIENTE_ELIMINAR(id))
+  const { data } = await api.put(API_ROUTES.CLIENTE_ELIMINAR(id))
   return true;
 }

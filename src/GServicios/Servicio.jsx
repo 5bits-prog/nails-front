@@ -6,67 +6,6 @@ import { ClienteContext } from "../Context/ClienteContext";
 import { obtenerTiposServiciosForCombo } from "../Services/TipoServicioService";
 
 
-
-const listaClientesPrueba = [
-  {
-    id: 1,
-    razonSocial: "Juan Pérez",
-    celular: "123456789",
-    mail: "juan.perez@example.com",
-  },
-  {
-    id: 2,
-    razonSocial: "María González",
-    celular: "987654321",
-    mail: "maria.gonzalez@example.com",
-  },
-  {
-    id: 3,
-    razonSocial: "Carlos López",
-    celular: "456789123",
-    mail: "carlos.lopez@example.com",
-  },
-  {
-    id: 4,
-    razonSocial: "Ana Rodríguez",
-    celular: "321654987",
-    mail: "ana.rodriguez@example.com",
-  },
-  {
-    id: 5,
-    razonSocial: "Luis Martínez",
-    celular: "789123456",
-    mail: "luis.martinez@example.com",
-  },
-];
-
-const tiposServicioPrueba = [
-  { id: 1, denominacion: "Consultoría" },
-  { id: 2, denominacion: "Desarrollo de Software" },
-  { id: 3, denominacion: "Soporte Técnico" },
-  { id: 4, denominacion: "Capacitación" },
-  { id: 5, denominacion: "Mantenimiento" },
-];
-const servicioPrueba = {
-  listaItems: [
-    {
-      tipoServicioId: 1,
-      precio: 1500,
-      observaciones: "Reunión inicial con el cliente",
-    },
-    {
-      tipoServicioId: 3,
-      precio: 2000,
-      observaciones: "Soporte técnico remoto",
-    },
-    {
-      tipoServicioId: 2,
-      precio: 3000,
-      observaciones: "Desarrollo de módulo de facturación",
-    },
-  ],
-};
-
 export default function Servicio({ title }) {
   let navegacion = useNavigate();
   const { id } = useParams();
@@ -78,13 +17,12 @@ export default function Servicio({ title }) {
     error,
   } = useContext(ServicioContext);
 
-  const{getClientes }= useContext(ClienteContext)
+  const{getClientes, clientes }= useContext(ClienteContext)
 
   const [servicio, setServicio] = useState({
     denominacion: "",
     listaItems: [],
   });
-  const [listaClientes, setListaClientes] = useState([]);
   const [selectedCliente, setSelectedCliente] = useState("");
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [tiposServicio, setTiposServicio] = useState([]);
@@ -93,18 +31,15 @@ export default function Servicio({ title }) {
 
   // Cargar datos iniciales
   useEffect(() => {
-    cargarClientes();
+    getClientes();
     cargarTipoServicios();
     if (id > 0) cargarServicioExistente();
   }, [id]);
 
-  const cargarClientes = async () => {
-    const resultado = await getClientes();
-    setListaClientes(resultado);
-  };
   const cargarTipoServicios = async () => {
     const resultado = await obtenerTiposServiciosForCombo();
     setTiposServicio(resultado);
+    
   };
   const cargarServicioExistente = async () => {
     const data = await cargarServicioPorId(id);
@@ -171,8 +106,8 @@ export default function Servicio({ title }) {
   e.preventDefault();
 
     // Validaciones
-    if (fecha > new Date().toISOString().split("T")[0]) {
-      setErrors({ ...errors, fecha: "La fecha no puede ser mayor a la actual" });
+    if (fecha < new Date().toISOString().split("T")[0]) {
+      setErrors({ ...errors, fecha: "La fecha no puede ser menor a la actual" });
       return;
     }
     if (!selectedCliente) {
@@ -184,9 +119,8 @@ export default function Servicio({ title }) {
       ...servicio,
       fechaDocumento: fecha,
       cliente: selectedCliente,
-      total: totalServicio,//Agregado
+      // total: totalServicio,
     };
-
     try {
       if (id > 0) {
         await actualizarServicioPorId(data);
@@ -233,7 +167,7 @@ export default function Servicio({ title }) {
               onChange={(e) => setSelectedCliente(e.target.value)}
             >
               <option value="">Seleccione...</option>
-              {listaClientesPrueba.map((cliente) => (
+              {clientes.map((cliente) => (
                 <option key={cliente.id} value={String(cliente.id)}>
                   {" "}
                   {/* Convertimos el id a string */}
@@ -261,7 +195,7 @@ export default function Servicio({ title }) {
         <label>Detalle del Servicio:</label>
         <hr />
 
-        {servicioPrueba.listaItems.map((item, index) => (
+        {servicio.listaItems.map((item, index) => (
           <div key={index}>
             <select
               name="tipoServicio"
@@ -269,7 +203,7 @@ export default function Servicio({ title }) {
               onChange={(e) => handleServicioChange(index, e)}
             >
               <option value="">Seleccione un tipo de servicio</option>
-              {tiposServicioPrueba.map((tipo) => (
+              {tiposServicio.map((tipo) => (
                 <option key={tipo.id} value={tipo.id}>
                   {tipo.denominacion}
                 </option>
@@ -278,7 +212,7 @@ export default function Servicio({ title }) {
             <input
               type="text"
               name="precio"
-              value={item.precio ? formatPrice(item.precio) : ""}
+              value={item.precio ? item.precio : ""}
               onChange={(e) => handleServicioChange(index, e)}
             />
             <input

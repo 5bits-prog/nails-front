@@ -7,8 +7,8 @@ const api = axios.create({
 });
 
 // Obtener una lista paginada de servicios
-export async function obtenerServicios(consulta, page, pageSize) {
-    const url = `${API_ROUTES.SERVICIOS_PAGE_QUERY}?consulta=${consulta}&page=${page}&size=${pageSize}`;
+export async function obtenerServicios() {
+    const url = `${API_ROUTES.SERVICIOS}`;
     const { data } = await api.get(url); 
     return data;
 }

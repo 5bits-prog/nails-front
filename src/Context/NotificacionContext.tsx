@@ -14,7 +14,7 @@ interface NotificationProviderProps {
   children: ReactNode;
 }
 
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({children,}) => {
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({children}) => {
 
   const [mensaje, setMensaje] = useState<string>("");
 

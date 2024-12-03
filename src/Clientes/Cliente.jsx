@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClienteContext } from "../Context/ClienteContext";
 
@@ -7,11 +7,12 @@ export default function Cliente({ title }) {
   
   let navegacion = useNavigate();
   const { id } = useParams();
-  const { getCliente, clienteActual, setClienteActual, newCliente, putCliente } = ClienteContext();
-
+  const { getCliente, clienteActual, setClienteActual, postCliente, putCliente, clientes } = useContext(ClienteContext);
+ 
   useEffect(() => {
     if (id) {
       getCliente(parseInt(id));
+      console.log(clienteActual)
     } else {
       // Limpiar el estado si no hay ID
       setClienteActual({ razonSocial: "", celular: "", mail: "" });
@@ -27,11 +28,12 @@ export default function Cliente({ title }) {
   };
 
   const onSubmit = async (e) => {
+    console.log('dataPost',clienteActual)
     e.preventDefault();
     if (id) {
       await putCliente(clienteActual);
     } else {
-      await newCliente(clienteActual);
+      await postCliente(clienteActual);
     }
     // Redirigimos a la pagina de inicio
     navegacion("/clienteList");
@@ -56,7 +58,7 @@ export default function Cliente({ title }) {
             id="razonSocial"
             name="razonSocial"
             required={true}
-            value={razonSocial}
+            value={clienteActual.razonSocial || ""}
             onChange={(e) => onInputChange(e)}
           />
         </div>
@@ -72,7 +74,7 @@ export default function Cliente({ title }) {
             id="celular"
             name="celular"
             required={true}
-            value={celular}
+            value={clienteActual.celular || ""}
             onChange={(e) => onInputChange(e)}
           />
         </div>
@@ -87,7 +89,7 @@ export default function Cliente({ title }) {
             className="form-control"
             id="mail"
             name="mail"
-            value={mail}
+            value={clienteActual.mail || ""}
             onChange={(e) => onInputChange(e)}
           />
         </div>

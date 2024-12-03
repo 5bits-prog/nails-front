@@ -2,11 +2,13 @@ import axios from "axios";
 import { API_URL } from "../App.config";
 
 const urlBase = API_URL + "/articulosPageQuery";
+
+
 export async function obtenerArticulosVenta(consulta, page, pageSize) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: `http://localhost:8080/nails_back/articulosPageQuery?consulta=Denominacion`,
     });
     return data;
   } catch (error) {
@@ -19,7 +21,7 @@ export async function obtenerArticuloVenta(id) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/articulos/${id}`,
+      url: `http://localhost:8080/nails_back/articulos/${id}`,
     });
     return data;
   } catch (error) {
@@ -34,15 +36,15 @@ export async function newArticuloVenta(model) {
       window.alert("entra por el put");
       const { data } = await axios({
         method: "PUT",
-        url: `${API_URL}/articulos/${model.id}`,
+        url: `http://localhost:8080/nails_back/articulos/${model.id}`,
         data: model,
       });
     } else {
       window.alert("entra por el post");
       const { data } = await axios({
         method: "POST",
-        url: `${API_URL}/articulos`,
-        data: model,
+        url: `http://localhost:8080/nails_back/articulos`,
+        data:model
       });
     }
 
@@ -66,8 +68,8 @@ export async function eliminarArticulosVenta(id) {
   const urlBase = API_URL + "/articulosEliminar";
   try{
   const { data } = await axios({
-    method: "PUT",
-    url: `${urlBase}/${id}`,
+    method: "DELETE",
+    url: `http://localhost:8080/nails_back/articuloEliminar/${id}`,
   });
   return true;
 }catch(error){

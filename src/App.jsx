@@ -2,7 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import ListadoCliente from "./Clientes/ListadoCliente";
 import Cliente from "./Clientes/Cliente";
 import ClienteProvider from "./Context/ClienteContext";
@@ -20,6 +20,7 @@ import ServicioProvider from "./Context/ServicioContext";
 import Servicio from "./GServicios/Servicio";
 import ListadoServicio from "./GServicios/ListadoServicio";
 import { NotificationProvider } from "./Context/NotificacionContext";
+import Home from "./extras/home/Home";
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
       <NotificationProvider>
         <Menu />
         <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route
+              exact
+              path="/home"
+              element={
+                <Home></Home>
+              }
+            />
           
           <Route
             exact
